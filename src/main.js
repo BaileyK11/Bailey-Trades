@@ -78,6 +78,7 @@ const appState = {
     document.getElementById('view-home').classList.add('hidden');
     document.getElementById('view-simulator').classList.add('hidden');
     document.getElementById('view-lessons').classList.add('hidden');
+    document.getElementById('view-trends').classList.add('hidden');
     
     // Show selected view panel
     document.getElementById(`view-${viewName}`).classList.remove('hidden');
@@ -94,6 +95,11 @@ const appState = {
     // Toggle header metrics visibility
     const globalStats = document.getElementById('global-header-stats');
     const startTourBtn = document.getElementById('start-tour-btn');
+    
+    // Clear trends refresh interval if leaving trends view
+    if (viewName !== 'trends') {
+      stopTrendsRefreshInterval();
+    }
     
     if (viewName === 'home') {
       globalStats.classList.add('hidden');
@@ -134,6 +140,17 @@ const appState = {
         if (this.lessonsChart) this.lessonsChart.resize();
       }, 50);
     }
+    else if (viewName === 'trends') {
+      globalStats.classList.remove('hidden');
+      startTourBtn.classList.add('hidden');
+      this.pauseSimulation();
+      
+      // Load current Yahoo Finance trends
+      fetchMarketTrends();
+      if (document.getElementById('trends-refresh-toggle').checked) {
+        startTrendsRefreshInterval();
+      }
+    }
     
     // Smooth scroll page back to top on view changes
     window.scrollTo({ top: 0, behavior: 'smooth' });
@@ -172,6 +189,9 @@ document.addEventListener('DOMContentLoaded', () => {
   
   // Default to home page dashboard, simulation is paused by default
   appState.switchView('home');
+  
+  // Fetch marquee news ticker items
+  fetchNewsTicker();
   
   // Initialize Lucide Icons
   if (window.lucide) {
@@ -642,4 +662,272 @@ function setupEventListeners() {
     updateUI();
     appState.resumeSimulation();
   });
+  
+  // Sortable headers click logic
+  document.querySelectorAll('.sortable-header').forEach(header => {
+    header.addEventListener('click', (e) => {
+      const colName = e.currentTarget.dataset.sort;
+      
+      // Update sorting settings
+      if (trendsSortColumn === colName) {
+        trendsSortDirection = trendsSortDirection === 'asc' ? 'desc' : 'asc';
+      } else {
+        trendsSortColumn = colName;
+        // Default numbers to descending, text to ascending
+        trendsSortDirection = colName === 'volume' || colName === 'changePercent' || colName === 'change' || colName === 'price' ? 'desc' : 'asc';
+      }
+      
+      // Update UI active header and sorting icons
+      document.querySelectorAll('.sortable-header').forEach(h => {
+        h.classList.remove('active');
+        const icon = h.querySelector('.sort-icon');
+        if (icon) {
+          icon.outerHTML = '<i data-lucide="chevrons-up-down" class="sort-icon"></i>';
+        }
+      });
+      
+      e.currentTarget.classList.add('active');
+      const arrowIcon = trendsSortDirection === 'asc' ? 'chevron-up' : 'chevron-down';
+      e.currentTarget.querySelector('.sort-icon').outerHTML = `<i data-lucide="${arrowIcon}" class="sort-icon"></i>`;
+      
+      if (window.lucide) window.lucide.createIcons();
+      
+      renderTrendsTable();
+    });
+  });
+  
+  // Search input change logic
+  const searchInput = document.getElementById('trends-search-input');
+  if (searchInput) {
+    searchInput.addEventListener('input', (e) => {
+      trendsSearchQuery = e.target.value;
+      renderTrendsTable();
+    });
+  }
+  
+  // Filter tab buttons click logic
+  document.querySelectorAll('.trends-tab-btn').forEach(btn => {
+    btn.addEventListener('click', (e) => {
+      document.querySelectorAll('.trends-tab-btn').forEach(b => b.classList.remove('active'));
+      e.currentTarget.classList.add('active');
+      
+      trendsFilter = e.currentTarget.dataset.filter;
+      
+      // If user filters by "Most Active", automatically sort by volume descending
+      if (trendsFilter === 'active') {
+        trendsSortColumn = 'volume';
+        trendsSortDirection = 'desc';
+        
+        // Update header headers classes
+        document.querySelectorAll('.sortable-header').forEach(h => {
+          h.classList.remove('active');
+          const icon = h.querySelector('.sort-icon');
+          if (icon) icon.outerHTML = '<i data-lucide="chevrons-up-down" class="sort-icon"></i>';
+        });
+        const volHeader = document.querySelector('.sortable-header[data-sort="volume"]');
+        if (volHeader) {
+          volHeader.classList.add('active');
+          volHeader.querySelector('.sort-icon').outerHTML = '<i data-lucide="chevron-down" class="sort-icon"></i>';
+        }
+        if (window.lucide) window.lucide.createIcons();
+      }
+      
+      renderTrendsTable();
+    });
+  });
+  
+  // Refresh Toggle change logic
+  const refreshToggle = document.getElementById('trends-refresh-toggle');
+  if (refreshToggle) {
+    refreshToggle.addEventListener('change', (e) => {
+      if (e.target.checked) {
+        startTrendsRefreshInterval();
+      } else {
+        stopTrendsRefreshInterval();
+      }
+    });
+  }
+  
+  // Manual refresh button click logic
+  const manualRefreshBtn = document.getElementById('trends-manual-refresh-btn');
+  if (manualRefreshBtn) {
+    manualRefreshBtn.addEventListener('click', () => {
+      fetchMarketTrends();
+    });
+  }
+  
+  // Connection retry button click logic
+  const retryBtn = document.getElementById('retry-trends-connection-btn');
+  if (retryBtn) {
+    retryBtn.addEventListener('click', () => {
+      fetchMarketTrends();
+    });
+  }
+}
+
+// ==========================================================================
+// Market Trends (Top 100) & News Marquee Helpers
+// ==========================================================================
+
+let trendsData = [];
+let trendsSortColumn = 'symbol';
+let trendsSortDirection = 'asc';
+let trendsFilter = 'all';
+let trendsSearchQuery = '';
+let trendsRefreshIntervalId = null;
+
+function startTrendsRefreshInterval() {
+  if (trendsRefreshIntervalId) clearInterval(trendsRefreshIntervalId);
+  trendsRefreshIntervalId = setInterval(fetchMarketTrends, 30000);
+}
+
+function stopTrendsRefreshInterval() {
+  if (trendsRefreshIntervalId) {
+    clearInterval(trendsRefreshIntervalId);
+    trendsRefreshIntervalId = null;
+  }
+}
+
+function fetchNewsTicker() {
+  const marqueeContainer = document.getElementById('ticker-marquee-items');
+  if (!marqueeContainer) return;
+  
+  fetch('http://localhost:5001/api/news')
+    .then(response => response.json())
+    .then(data => {
+      if (data.success && data.news.length > 0) {
+        // Repeated items for seamless scrolling marquee
+        const repeatedNews = [...data.news, ...data.news, ...data.news];
+        marqueeContainer.innerHTML = repeatedNews.map(item => `
+          <a class="ticker-item" href="${item.link}" target="_blank">
+            <span class="ticker-tag">${item.ticker}</span>
+            <span class="ticker-title">${item.title}</span>
+            <span class="ticker-source">(${item.publisher})</span>
+          </a>
+        `).join('');
+      } else {
+        loadFallbackNewsTicker();
+      }
+    })
+    .catch(() => {
+      loadFallbackNewsTicker();
+    });
+}
+
+function loadFallbackNewsTicker() {
+  const marqueeContainer = document.getElementById('ticker-marquee-items');
+  if (!marqueeContainer) return;
+  
+  const fallbackTips = [
+    { type: "TIP", text: "Look for volume confirmation before buying a breakout. High volume means institutions are buying!" },
+    { type: "GLOSSARY", text: "Bid is the highest price a buyer will pay; Ask is the lowest price a seller will accept." },
+    { type: "RISK", text: "Never risk more than 1% to 2% of your capital on a single trade. Keep position sizes small!" },
+    { type: "GLOSSARY", text: "Support represents the buying floor; Resistance represents the selling ceiling." },
+    { type: "TIP", text: "The trend is your friend! Identify trends using the golden 20-period Moving Average." }
+  ];
+  
+  const repeatedTips = [...fallbackTips, ...fallbackTips, ...fallbackTips];
+  marqueeContainer.innerHTML = repeatedTips.map(item => `
+    <span class="ticker-item">
+      <span class="ticker-tag tag-tips">${item.type}</span>
+      <span class="ticker-title">${item.text}</span>
+    </span>
+  `).join('');
+}
+
+function fetchMarketTrends() {
+  const offlineCard = document.getElementById('trends-offline-card');
+  const onlinePanel = document.getElementById('trends-online-panel');
+  const refreshBtn = document.getElementById('trends-manual-refresh-btn');
+  
+  if (refreshBtn) {
+    refreshBtn.disabled = true;
+    refreshBtn.innerHTML = '<i data-lucide="loader" class="animate-spin" style="width:14px; height:14px; display:inline-block; vertical-align:middle;"></i> Loading...';
+    if (window.lucide) window.lucide.createIcons();
+  }
+
+  fetch('http://localhost:5001/api/trends')
+    .then(response => response.json())
+    .then(data => {
+      if (data.success) {
+        if (offlineCard) offlineCard.classList.add('hidden');
+        if (onlinePanel) onlinePanel.classList.remove('hidden');
+        trendsData = data.trends;
+        renderTrendsTable();
+      } else {
+        showTrendsOffline();
+      }
+    })
+    .catch(() => {
+      showTrendsOffline();
+    })
+    .finally(() => {
+      if (refreshBtn) {
+        refreshBtn.disabled = false;
+        refreshBtn.innerHTML = '<i data-lucide="rotate-ccw" style="width:14px; height:14px; display:inline-block; vertical-align:middle;"></i> Refresh';
+        if (window.lucide) window.lucide.createIcons();
+      }
+    });
+}
+
+function showTrendsOffline() {
+  const offlineCard = document.getElementById('trends-offline-card');
+  const onlinePanel = document.getElementById('trends-online-panel');
+  if (offlineCard) offlineCard.classList.remove('hidden');
+  if (onlinePanel) onlinePanel.classList.add('hidden');
+}
+
+function renderTrendsTable() {
+  const body = document.getElementById('market-trends-body');
+  if (!body) return;
+  
+  // 1. Filter data based on search and tab selections
+  let filtered = trendsData.filter(item => {
+    const symbolMatch = item.symbol.toLowerCase().includes(trendsSearchQuery.toLowerCase());
+    const nameMatch = item.name.toLowerCase().includes(trendsSearchQuery.toLowerCase());
+    return symbolMatch || nameMatch;
+  });
+  
+  if (trendsFilter === 'gainers') {
+    filtered = filtered.filter(item => item.changePercent > 0);
+  } else if (trendsFilter === 'losers') {
+    filtered = filtered.filter(item => item.changePercent < 0);
+  }
+  
+  // 2. Sort data
+  filtered.sort((a, b) => {
+    let valA = a[trendsSortColumn];
+    let valB = b[trendsSortColumn];
+    
+    if (typeof valA === 'string') {
+      valA = valA.toLowerCase();
+      valB = valB.toLowerCase();
+    }
+    
+    if (valA < valB) return trendsSortDirection === 'asc' ? -1 : 1;
+    if (valA > valB) return trendsSortDirection === 'asc' ? 1 : -1;
+    return 0;
+  });
+  
+  // 3. Render rows
+  if (filtered.length === 0) {
+    body.innerHTML = `<tr><td colspan="6" class="text-muted text-center py-4">No stocks match your search criteria.</td></tr>`;
+    return;
+  }
+  
+  body.innerHTML = filtered.map(item => {
+    const pnlClass = item.change >= 0 ? 'text-accent-green' : 'text-accent-red';
+    const sign = item.change >= 0 ? '+' : '';
+    
+    return `
+      <tr>
+        <td style="font-weight: 700; color: var(--color-text-primary);">${item.symbol}</td>
+        <td class="text-muted">${item.name}</td>
+        <td style="font-weight: 600; font-variant-numeric: tabular-nums;">$${item.price.toFixed(2)}</td>
+        <td class="${pnlClass}" style="font-weight: 600; font-variant-numeric: tabular-nums;">${sign}$${item.change.toFixed(2)}</td>
+        <td class="${pnlClass}" style="font-weight: 700; font-variant-numeric: tabular-nums;">${sign}${item.changePercent.toFixed(2)}%</td>
+        <td style="font-variant-numeric: tabular-nums; color: var(--color-text-muted);">${item.volume.toLocaleString()}</td>
+      </tr>
+    `;
+  }).join('');
 }
