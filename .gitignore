@@ -3,3 +3,5 @@ dist
 .DS_Store
 .gemini
 *.log
+venv/
+venv_test/

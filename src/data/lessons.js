@@ -145,5 +145,46 @@ export const lessons = [
       correctAnswer: 2,
       explanation: "A checklist enforces strict rules, preventing emotional impulses (like FOMO—Fear Of Missing Out) and encouraging disciplined risk management."
     }
+  },
+  {
+    id: 6,
+    title: "Understanding Exchange-Traded Funds (ETFs)",
+    shortDescription: "Learn how ETFs pool investments to buy bundles of stocks, reducing risk through instant diversification.",
+    icon: "layers",
+    content: `
+      <p>Building a portfolio of individual stocks requires extensive research, constant monitoring, and high transaction costs. For most investors, a more effective path is utilizing <strong>Exchange-Traded Funds (ETFs)</strong>.</p>
+      
+      <h4>1. What is an ETF? (The Stock Basket)</h4>
+      <p>An <strong>Exchange-Traded Fund (ETF)</strong> is a financial instrument that pools money from thousands of investors to buy a diversified basket of securities (such as stocks, bonds, or commodities). It trades on public stock exchanges just like a regular stock, with its price fluctuating throughout the trading day.</p>
+      <p><em>Think of an individual stock as buying a single ingredient (like pepperoni). An ETF is like buying the whole pizza with all the toppings.</em> For example, buying a single share of the <strong>SPY ETF</strong> gives you fractional ownership in all 500 of the largest U.S. companies (including Apple, Microsoft, Amazon, and NVIDIA) simultaneously.</p>
+      
+      <h4>2. Why Are ETFs Good to Invest In? (The Benefits)</h4>
+      <ul>
+        <li><strong>Instant Diversification:</strong> The primary rule of investing is "don't put all your eggs in one basket." If you buy shares of a single company and that company goes bankrupt, you lose 100% of your investment. If you buy an S&P 500 ETF and one company fails, it represents less than 1% of the fund, leaving your capital safe.</li>
+        <li><strong>Lower Cost:</strong> Buying 500 individual stocks would cost thousands in broker transaction fees and require a huge cash balance. With an ETF, you get all 500 stocks for the cost of a single share, with near-zero transaction fees.</li>
+        <li><strong>Passive Management & Low Fees:</strong> Most ETFs are designed to passively track a market index (like the S&P 500 or Nasdaq 100). Because they don't require expensive active fund managers, their annual management fees (known as <strong>Expense Ratios</strong>) are extremely low—often less than 0.1% per year.</li>
+        <li><strong>Targeted Investing:</strong> ETFs allow you to easily invest in specific industries or themes. You can buy a semiconductor ETF (like SOXX) to invest in computer chip makers, a clean energy ETF, or a gold ETF, without needing to know which individual company will win the sector.</li>
+      </ul>
+      
+      <h4>3. Popular ETFs You Can Trade</h4>
+      <p>Many of the most liquid and widely traded instruments in the world are ETFs. On our <strong>Trends</strong> page, you'll see several marquee index ETFs:</p>
+      <ul>
+        <li><strong>SPY:</strong> Tracks the S&P 500 Index (large-cap U.S. stock market).</li>
+        <li><strong>QQQ:</strong> Tracks the Nasdaq 100 Index (heavy focus on mega-cap technology and innovation).</li>
+        <li><strong>IWM:</strong> Tracks the Russell 2000 Index (small-cap U.S. companies, offering high growth potential but higher volatility).</li>
+        <li><strong>GLD:</strong> Tracks the spot price of gold (often used as a safe haven or hedge against inflation).</li>
+      </ul>
+    `,
+    quiz: {
+      question: "Why are Exchange-Traded Funds (ETFs) considered an excellent tool for risk reduction and diversification?",
+      options: [
+        "They guarantee that you will never lose money on a trade.",
+        "They pool investor funds to buy a broad basket of stocks, so a drop in one stock has a minor impact.",
+        "They pay fixed monthly interest rates guaranteed by the government.",
+        "They prevent stock prices from moving downward."
+      ],
+      correctAnswer: 1,
+      explanation: "By spreading capital across dozens or hundreds of different companies, ETFs dilute the negative impact of any single stock performing poorly, providing instant diversification and risk reduction."
+    }
   }
 ];

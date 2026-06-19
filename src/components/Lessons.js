@@ -214,6 +214,13 @@ export class Lessons {
       chart.toggleSMAIndicator(true);
       chart.toggleSRIndicator(true);
     }
+    else if (lessonId === 6) {
+      // ETFs
+      badgeEl.textContent = "Diversified Index ETFs";
+      tipEl.innerHTML = `<i data-lucide="info" class="text-accent-cyan" style="width:14px; height:14px; display:inline; vertical-align:middle; margin-right:4px;"></i> ETFs represent a basket of stocks (like SPY). Note how a diversified basket shows a smoother, more resilient trend compared to high-volatility single stocks.`;
+      
+      chart.toggleSMAIndicator(true);
+    }
     
     if (window.lucide) {
       window.lucide.createIcons();
