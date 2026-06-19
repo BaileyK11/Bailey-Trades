@@ -1,0 +1,393 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>BaileyTrades Academy - Interactive Stock Trading Learning Platform</title>
+  
+  <!-- Modern Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Outfit:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  
+  <!-- Lucide Icons CDN -->
+  <script src="https://unpkg.com/lucide@latest"></script>
+  
+  <!-- Application CSS -->
+  <link rel="stylesheet" href="./src/style.css">
+</head>
+<body class="dark-theme">
+  <!-- Interactive Tour Overlay -->
+  <div id="tutorial-overlay" class="tutorial-overlay hidden">
+    <div id="tutorial-mask" class="tutorial-mask"></div>
+    <div id="tutorial-card" class="tutorial-card">
+      <div class="tutorial-card-header">
+        <span class="tutorial-badge">LEARN</span>
+        <button id="close-tutorial-btn" class="icon-btn"><i data-lucide="x"></i></button>
+      </div>
+      <div class="tutorial-card-body">
+        <h3 id="tutorial-title">Title of Guide</h3>
+        <p id="tutorial-text">Detailed explanation goes here.</p>
+      </div>
+      <div class="tutorial-card-footer">
+        <div class="progress-dots" id="tutorial-progress-dots"></div>
+        <button id="next-tutorial-btn" class="primary-btn">Next <i data-lucide="arrow-right"></i></button>
+      </div>
+    </div>
+  </div>
+
+  <div class="app-container">
+    <!-- Global Header with Navigation -->
+    <header class="app-header">
+      <div class="logo-area" id="header-logo">
+        <div class="logo-icon"><i data-lucide="trending-up"></i></div>
+        <div class="logo-text">
+          <h1>BaileyTrades</h1>
+          <span>Academy</span>
+        </div>
+      </div>
+      
+      <!-- Top Navigation Tabs -->
+      <nav class="header-nav">
+        <button class="nav-tab active" data-target="home">
+          <i data-lucide="home"></i> Home
+        </button>
+        <button class="nav-tab" data-target="lessons">
+          <i data-lucide="graduation-cap"></i> Lessons
+        </button>
+        <button class="nav-tab" data-target="simulator">
+          <i data-lucide="line-chart"></i> Simulator
+        </button>
+      </nav>
+      
+      <!-- Header stats: Collapsed on home view, shown on simulator/lessons -->
+      <div class="header-stats hidden" id="global-header-stats">
+        <div class="stat-box">
+          <span class="stat-label">Simulator Cash</span>
+          <span class="stat-value text-accent-cyan" id="header-balance">$10,000.00</span>
+        </div>
+        <div class="stat-box">
+          <span class="stat-label">Net Equity</span>
+          <span class="stat-value text-accent-green" id="header-portfolio-val">$10,000.00</span>
+        </div>
+        <div class="stat-box">
+          <span class="stat-label">Net Profit/Loss</span>
+          <span class="stat-value" id="header-total-pnl">$0.00 (0.00%)</span>
+        </div>
+      </div>
+
+      <div class="header-actions">
+        <button id="reset-sim-btn" class="secondary-btn" title="Reset Data">
+          <i data-lucide="rotate-ccw"></i> Reset
+        </button>
+        <button id="start-tour-btn" class="primary-btn hidden" title="Start Guided Tour">
+          <i data-lucide="help-circle"></i> Tour
+        </button>
+      </div>
+    </header>
+
+    <!-- SPA VIEW 1: HOME PAGE DASHBOARD -->
+    <div id="view-home" class="view-container">
+      <!-- Welcome Hero Card -->
+      <div class="hero-section">
+        <div class="hero-overlay"></div>
+        <div class="hero-content">
+          <h2>Welcome to BaileyTrades Academy</h2>
+          <p>Learn to trade stocks step-by-step with real-time visual simulations, indicators, and paper trading strategies.</p>
+        </div>
+      </div>
+
+      <div class="home-grid">
+        <!-- Progress Summary Card -->
+        <div class="card welcome-card">
+          <div class="card-header">
+            <h3>Your Learning Progress</h3>
+            <i data-lucide="award" class="text-accent-gold"></i>
+          </div>
+          <p class="welcome-text">Complete interactive lessons to build your foundational knowledge, then test your skills inside the trading sandbox simulator.</p>
+          
+          <div class="progress-section">
+            <div class="progress-info-row">
+              <span id="home-progress-percentage">0% Completed</span>
+              <span id="home-progress-label">0 of 5 Lessons</span>
+            </div>
+            <div class="progress-bar-container">
+              <div class="progress-bar-fill" id="home-progress-fill" style="width: 0%"></div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Mode Select Paths -->
+        <div class="paths-grid">
+          <!-- Path A: Lessons -->
+          <div class="card path-card" id="path-lessons-card">
+            <div class="path-icon text-accent-cyan">
+              <i data-lucide="graduation-cap"></i>
+            </div>
+            <div class="path-content">
+              <h4>Foundational Course</h4>
+              <p>Start from the absolute basics. Understand stock tickers, candlestick analysis, trends, and risk management.</p>
+              <button class="primary-btn btn-enter-lessons mt-3">Start Course &rarr;</button>
+            </div>
+          </div>
+
+          <!-- Path B: Simulator -->
+          <div class="card path-card" id="path-simulator-card">
+            <div class="path-icon text-accent-green">
+              <i data-lucide="line-chart"></i>
+            </div>
+            <div class="path-content">
+              <h4>Trading Sandbox</h4>
+              <p>Practice trading mock assets in real-time under custom market scenarios with $10,000 of virtual funds.</p>
+              <button class="primary-btn btn-enter-simulator mt-3" style="background:var(--color-accent-green); box-shadow:var(--shadow-glow-green);">Launch Simulator &rarr;</button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Course Roadmap List -->
+      <div class="card roadmap-card">
+        <div class="card-header">
+          <h3>Course Curriculum Roadmap</h3>
+          <span class="badge">Step-by-Step Learning</span>
+        </div>
+        <div class="roadmap-grid" id="home-roadmap-container">
+          <!-- Populate dynamically in JS -->
+        </div>
+      </div>
+    </div>
+
+    <!-- SPA VIEW 2: PAPER TRADING SIMULATOR -->
+    <div id="view-simulator" class="view-container hidden">
+      <main class="app-workspace">
+        <!-- Left Column: Chart and portfolio details -->
+        <section class="left-panel">
+          <!-- Ticker Panel -->
+          <div class="card stock-details-card">
+            <div class="stock-title-info">
+              <h2>EDU</h2>
+              <div class="stock-meta">
+                <span>Educational Growth Stock</span>
+                <span class="badge" id="stock-scenario-badge">Bull Market Breakout</span>
+              </div>
+            </div>
+            <div class="stock-price-info">
+              <span class="current-price" id="stock-current-price">$100.00</span>
+              <span class="price-change text-accent-green" id="stock-price-change">+$1.50 (+1.52%)</span>
+            </div>
+          </div>
+
+          <!-- Simulator Candlestick Chart -->
+          <div class="card chart-card" id="chart-area-container">
+            <div class="chart-header">
+              <div class="chart-tabs">
+                <span style="font-weight: 700; font-size: 0.95rem;"><i data-lucide="candlestick-chart"></i> Simulator Chart</span>
+              </div>
+              <div class="chart-indicators-menu">
+                <button class="indicator-btn active" id="toggle-sma">
+                  <i class="indicator-dot line-sma"></i> SMA (20)
+                </button>
+                <button class="indicator-btn" id="toggle-support-resistance">
+                  <i class="indicator-dot line-sr"></i> Support & Resistance
+                </button>
+              </div>
+            </div>
+            
+            <div class="canvas-wrapper">
+              <canvas id="trading-chart"></canvas>
+              <div id="chart-tooltip" class="chart-tooltip hidden"></div>
+            </div>
+
+            <!-- Controls -->
+            <div class="chart-controls">
+              <div class="sim-speed-control">
+                <button id="play-pause-btn" class="icon-btn active" title="Play/Pause Simulation">
+                  <i data-lucide="pause"></i>
+                </button>
+                <button id="step-forward-btn" class="icon-btn" title="Next Candle (Step Time)">
+                  <i data-lucide="skip-forward"></i>
+                </button>
+                <span class="divider"></span>
+                <span class="control-label">Speed:</span>
+                <button class="speed-btn active" data-speed="1000">1s</button>
+                <button class="speed-btn" data-speed="500">0.5s</button>
+                <button class="speed-btn" data-speed="250">0.25s</button>
+              </div>
+
+              <div class="market-scenario-select">
+                <span class="control-label">Scenario:</span>
+                <select id="scenario-selector">
+                  <option value="bull-breakout">Bull Market Breakout</option>
+                  <option value="bear-downtrend">Bear Market Downtrend</option>
+                  <option value="support-bounce">Support Level Bounce</option>
+                  <option value="high-volatility">High Volatility Range</option>
+                </select>
+              </div>
+            </div>
+          </div>
+
+          <!-- Portfolio holdings ledger -->
+          <div class="card portfolio-card">
+            <div class="card-header">
+              <div class="tab-buttons">
+                <button class="tab-btn active" data-tab="holdings">Active Positions</button>
+                <button class="tab-btn" data-tab="history">Trade Ledger</button>
+              </div>
+            </div>
+            <div class="card-body">
+              <div class="tab-content" id="tab-holdings">
+                <table class="table">
+                  <thead>
+                    <tr>
+                      <th>Asset</th>
+                      <th>Shares</th>
+                      <th>Avg Buy Price</th>
+                      <th>Current Price</th>
+                      <th>Market Value</th>
+                      <th>Profit/Loss (P&L)</th>
+                      <th>Actions</th>
+                    </tr>
+                  </thead>
+                  <tbody id="holdings-list-body"></tbody>
+                </table>
+              </div>
+              <div class="tab-content hidden" id="tab-history">
+                <table class="table">
+                  <thead>
+                    <tr>
+                      <th>Time</th>
+                      <th>Asset</th>
+                      <th>Type</th>
+                      <th>Shares</th>
+                      <th>Execution Price</th>
+                      <th>Total Capital</th>
+                      <th>Realized P&L</th>
+                    </tr>
+                  </thead>
+                  <tbody id="ledger-list-body"></tbody>
+                </table>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <!-- Right Column: Trading form & checklists -->
+        <section class="right-panel">
+          <div class="card order-card" id="order-card-container">
+            <div class="card-header">
+              <h3>Place Order</h3>
+            </div>
+            <div class="card-body">
+              <div class="trade-type-selector">
+                <button class="btn-trade-type active" id="btn-buy" data-type="BUY">BUY</button>
+                <button class="btn-trade-type" id="btn-sell" data-type="SELL">SELL</button>
+              </div>
+
+              <div class="form-group">
+                <label for="order-shares">Quantity (Shares)</label>
+                <div class="input-with-buttons">
+                  <button type="button" class="adjust-qty-btn" id="qty-minus">-</button>
+                  <input type="number" id="order-shares" min="1" step="1" value="10">
+                  <button type="button" class="adjust-qty-btn" id="qty-plus">+</button>
+                </div>
+              </div>
+
+              <div class="form-group">
+                <div class="order-summary-row">
+                  <span>Estimated Cost</span>
+                  <span class="summary-val text-accent-white" id="order-est-cost">$0.00</span>
+                </div>
+                <div class="order-summary-row">
+                  <span>Available Cash</span>
+                  <span class="summary-val text-accent-white" id="order-available-cash">$10,000.00</span>
+                </div>
+              </div>
+
+              <button type="button" id="submit-order-btn" class="order-btn buy-btn">BUY EDU</button>
+              
+              <!-- Educational Checklist helper -->
+              <div class="checklist-panel mt-3">
+                <h4><i data-lucide="check-square"></i> Trade Checklist</h4>
+                <ul class="checklist-items">
+                  <li id="chk-trend"><i data-lucide="circle"></i> Trend confirmed (Price above SMA20)</li>
+                  <li id="chk-sr"><i data-lucide="circle"></i> Clear of immediate resistance</li>
+                  <li id="chk-risk"><i data-lucide="circle"></i> Risk-reward ratio looks favorable</li>
+                </ul>
+              </div>
+            </div>
+          </div>
+        </section>
+      </main>
+    </div>
+
+    <!-- SPA VIEW 3: DEDICATED CLASSROOM / LESSONS -->
+    <div id="view-lessons" class="view-container hidden">
+      <div class="lessons-layout">
+        <!-- Lessons Course Sidebar List -->
+        <aside class="lessons-sidebar card">
+          <div class="card-header">
+            <h3>Course Curriculum</h3>
+            <span class="progress-indicator" id="lesson-progress-text">0 of 5</span>
+          </div>
+          <div class="lesson-list" id="lesson-index-list">
+            <!-- Loaded dynamically -->
+          </div>
+        </aside>
+
+        <!-- Lessons main reading content column -->
+        <section class="lesson-reading-card card">
+          <!-- Lesson Index View -->
+          <div id="lessons-intro-panel" class="lessons-intro-panel text-center">
+            <i data-lucide="book-open" class="text-accent-cyan mb-3" style="width: 48px; height: 48px;"></i>
+            <h3>BaileyTrades Classroom</h3>
+            <p class="text-muted">Select an educational module from the sidebar index to begin learning trading concepts.</p>
+          </div>
+
+          <!-- Active Lesson View -->
+          <div class="active-lesson-panel hidden" id="active-lesson-container">
+            <button id="back-to-lessons-btn" class="back-link"><i data-lucide="arrow-left"></i> Course Roadmap</button>
+            <h2 id="active-lesson-title" style="margin-top:0.5rem; font-family:var(--font-family-title);">Lesson Title</h2>
+            
+            <div class="lesson-content-body" id="active-lesson-text">
+              <!-- Content goes here -->
+            </div>
+            
+            <!-- Quiz -->
+            <div class="lesson-quiz hidden" id="lesson-quiz-container">
+              <h5>Check Your Understanding</h5>
+              <p id="quiz-question">Question text here</p>
+              <div class="quiz-options" id="quiz-options-container"></div>
+              <div id="quiz-feedback" class="quiz-feedback hidden"></div>
+            </div>
+            
+            <button id="complete-lesson-btn" class="primary-btn full-width mt-3">Complete Lesson</button>
+          </div>
+        </section>
+
+        <!-- Sidebar visual interactive widget to practice and see in real time -->
+        <section class="lessons-visualizer-card card">
+          <div class="card-header">
+            <h3>Concept Visualizer</h3>
+            <span class="badge" id="lessons-visualizer-badge">Demo Mode</span>
+          </div>
+          
+          <div class="lessons-chart-container" style="flex-grow:1; display:flex; flex-direction:column; gap:0.75rem;">
+            <!-- Canvas wrapper -->
+            <div class="canvas-wrapper" id="lessons-chart-area-container" style="flex-grow: 1; min-height:180px;">
+              <canvas id="lessons-trading-chart"></canvas>
+              <div id="lessons-chart-tooltip" class="chart-tooltip hidden"></div>
+            </div>
+            
+            <div class="lessons-visualizer-controls" style="font-size:0.8rem; line-height:1.4; color:var(--color-text-secondary);">
+              <p id="lessons-visualizer-tip"><i data-lucide="info" class="text-accent-cyan" style="width:14px; height:14px; display:inline; vertical-align:middle; margin-right:4px;"></i> Use the visual tool above to study the candlesticks and moving averages explained in the lesson.</p>
+            </div>
+          </div>
+        </section>
+      </div>
+    </div>
+  </div>
+
+  <!-- Main script loaded as module -->
+  <script type="module" src="./src/main.js"></script>
+</body>
+</html>
