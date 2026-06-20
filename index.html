@@ -37,8 +37,8 @@
   </div>
 
   <div class="app-container">
-    <!-- Global Header with Navigation -->
-    <header class="app-header">
+    <!-- Global Brand Bar -->
+    <div class="brand-bar">
       <div class="logo-area" id="header-logo">
         <div class="logo-icon"><i data-lucide="trending-up"></i></div>
         <div class="logo-text">
@@ -46,22 +46,6 @@
           <span>Academy</span>
         </div>
       </div>
-      
-      <!-- Top Navigation Tabs -->
-      <nav class="header-nav">
-        <button class="nav-tab active" data-target="home">
-          <i data-lucide="home"></i> Home
-        </button>
-        <button class="nav-tab" data-target="lessons">
-          <i data-lucide="graduation-cap"></i> Lessons
-        </button>
-        <button class="nav-tab" data-target="simulator">
-          <i data-lucide="line-chart"></i> Simulator
-        </button>
-        <button class="nav-tab" data-target="trends">
-          <i data-lucide="trending-up"></i> Market Trends
-        </button>
-      </nav>
       
       <!-- Header stats: Collapsed on home view, shown on simulator/lessons -->
       <div class="header-stats hidden" id="global-header-stats">
@@ -87,6 +71,25 @@
           <i data-lucide="help-circle"></i> Tour
         </button>
       </div>
+    </div>
+
+    <!-- Global Header with Navigation -->
+    <header class="app-header navigation-bar">
+      <!-- Top Navigation Tabs -->
+      <nav class="header-nav">
+        <button class="nav-tab active" data-target="home">
+          <i data-lucide="home"></i> Home
+        </button>
+        <button class="nav-tab" data-target="lessons">
+          <i data-lucide="graduation-cap"></i> Lessons
+        </button>
+        <button class="nav-tab" data-target="simulator">
+          <i data-lucide="line-chart"></i> Simulator
+        </button>
+        <button class="nav-tab" data-target="trends">
+          <i data-lucide="trending-up"></i> Market Trends
+        </button>
+      </nav>
     </header>
 
     <!-- Global News Ticker Tape Bar -->

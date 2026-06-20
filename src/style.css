@@ -7,25 +7,25 @@
   --font-family-title: 'Outfit', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
   --font-family-body: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
 
-  /* Colors */
-  --color-bg: #070a13;
-  --color-card-bg: rgba(18, 24, 38, 0.75);
-  --color-card-border: rgba(34, 43, 62, 0.6);
-  --color-border-hover: rgba(56, 189, 248, 0.45);
+  /* Colors - Yellow and Black Theme */
+  --color-bg: #050507;
+  --color-card-bg: rgba(15, 15, 15, 0.85);
+  --color-card-border: rgba(38, 38, 38, 0.6);
+  --color-border-hover: rgba(235, 229, 52, 0.5);
   
   --color-text-primary: #f8fafc;
-  --color-text-secondary: #94a3b8;
-  --color-text-muted: #64748b;
+  --color-text-secondary: #a1a1aa;
+  --color-text-muted: #71717a;
   
   /* Accent Colors */
-  --color-accent-cyan: #06b6d4;
-  --color-accent-cyan-rgb: 6, 182, 212;
+  --color-accent-cyan: #ebe534;
+  --color-accent-cyan-rgb: 235, 229, 52;
   --color-accent-green: #10b981;
   --color-accent-green-rgb: 16, 185, 129;
-  --color-accent-red: #f43f5e;
-  --color-accent-red-rgb: 244, 63, 94;
-  --color-accent-gold: #eab308;
-  --color-accent-gold-rgb: 234, 179, 8;
+  --color-accent-red: #ef4444;
+  --color-accent-red-rgb: 239, 68, 68;
+  --color-accent-gold: #f59e0b;
+  --color-accent-gold-rgb: 245, 158, 11;
   
   /* Interaction States */
   --transition-fast: 0.15s ease;
@@ -35,10 +35,10 @@
   --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
   --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
   --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
-  --shadow-glow-cyan: 0 0 20px rgba(6, 182, 212, 0.15);
+  --shadow-glow-cyan: 0 0 20px rgba(235, 229, 52, 0.15);
   --shadow-glow-green: 0 0 20px rgba(16, 185, 129, 0.15);
-  --shadow-glow-red: 0 0 20px rgba(244, 63, 94, 0.15);
-  --shadow-glow-gold: 0 0 20px rgba(234, 179, 8, 0.15);
+  --shadow-glow-red: 0 0 20px rgba(239, 68, 68, 0.15);
+  --shadow-glow-gold: 0 0 20px rgba(245, 158, 11, 0.15);
 }
 
 /* Base Styles & Resets */
@@ -57,7 +57,7 @@ html, body {
   height: 100%;
   overflow-x: hidden;
   background-image: 
-    radial-gradient(circle at 10% 15%, rgba(6, 182, 212, 0.06) 0%, transparent 40%),
+    radial-gradient(circle at 10% 15%, rgba(239, 68, 68, 0.06) 0%, transparent 40%),
     radial-gradient(circle at 90% 85%, rgba(16, 185, 129, 0.04) 0%, transparent 40%);
   background-attachment: fixed;
 }
@@ -92,6 +92,16 @@ button, input, select {
   gap: 1.25rem;
 }
 
+/* Brand Bar Styling */
+.brand-bar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0.5rem 1.5rem;
+  background: transparent;
+  z-index: 50;
+}
+
 /* Header Styling */
 .app-header {
   display: flex;
@@ -106,6 +116,15 @@ button, input, select {
   z-index: 50;
 }
 
+/* Smaller Floating Navigation Pill style */
+.navigation-bar {
+  margin-top: -0.65rem;
+  align-self: center;
+  width: fit-content;
+  padding: 0.35rem;
+  box-shadow: 0 0 20px rgba(239, 68, 68, 0.08);
+}
+
 .logo-area {
   display: flex;
   align-items: center;
@@ -114,7 +133,7 @@ button, input, select {
 }
 
 .logo-icon {
-  background: linear-gradient(135deg, var(--color-accent-cyan), var(--color-accent-green));
+  background: linear-gradient(135deg, var(--color-accent-cyan), #854d0e);
   color: var(--color-bg);
   width: 2.5rem;
   height: 2.5rem;
@@ -123,7 +142,7 @@ button, input, select {
   align-items: center;
   justify-content: center;
   font-weight: 700;
-  box-shadow: 0 0 15px rgba(6, 182, 212, 0.3);
+  box-shadow: 0 0 15px rgba(235, 229, 52, 0.3);
 }
 
 .logo-text h1 {
@@ -176,8 +195,8 @@ button, input, select {
 }
 
 .nav-tab.active {
-  background: rgba(6, 182, 212, 0.1);
-  border: 1px solid rgba(6, 182, 212, 0.25);
+  background: rgba(239, 68, 68, 0.1);
+  border: 1px solid rgba(239, 68, 68, 0.25);
   color: var(--color-accent-cyan);
   box-shadow: var(--shadow-glow-cyan);
 }
@@ -235,7 +254,7 @@ button, input, select {
 .hero-section {
   position: relative;
   background: linear-gradient(135deg, rgba(18, 24, 38, 0.9), rgba(9, 13, 22, 0.95)), 
-              radial-gradient(circle at 90% 10%, rgba(6, 182, 212, 0.12) 0%, transparent 50%);
+              radial-gradient(circle at 90% 10%, rgba(239, 68, 68, 0.12) 0%, transparent 50%);
   border: 1px solid var(--color-card-border);
   border-radius: 1rem;
   padding: 2rem 2.5rem;
@@ -329,9 +348,9 @@ button, input, select {
 
 .progress-bar-fill {
   height: 100%;
-  background: linear-gradient(90deg, var(--color-accent-cyan), var(--color-accent-green));
+  background: linear-gradient(90deg, var(--color-accent-cyan), #854d0e);
   border-radius: 4px;
-  box-shadow: 0 0 8px rgba(6, 182, 212, 0.4);
+  box-shadow: 0 0 8px rgba(235, 229, 52, 0.4);
   width: 0%;
   transition: width var(--transition-slow);
 }
@@ -370,7 +389,7 @@ button, input, select {
 }
 
 .path-card#path-lessons-card:hover .path-icon {
-  border-color: rgba(6, 182, 212, 0.4);
+  border-color: rgba(239, 68, 68, 0.4);
   box-shadow: var(--shadow-glow-cyan);
 }
 
@@ -419,7 +438,7 @@ button, input, select {
 }
 
 .roadmap-item:hover {
-  border-color: rgba(6, 182, 212, 0.3);
+  border-color: rgba(239, 68, 68, 0.3);
   transform: translateY(-2px);
   background: rgba(255, 255, 255, 0.04);
 }
@@ -465,9 +484,9 @@ button, input, select {
 }
 
 .badge-start {
-  background: rgba(6, 182, 212, 0.15);
+  background: rgba(239, 68, 68, 0.15);
   color: var(--color-accent-cyan);
-  border: 1px solid rgba(6, 182, 212, 0.25);
+  border: 1px solid rgba(239, 68, 68, 0.25);
 }
 
 .badge-completed {
@@ -578,7 +597,7 @@ button, input, select {
 
 .badge {
   display: inline-block;
-  background: rgba(6, 182, 212, 0.15);
+  background: rgba(239, 68, 68, 0.15);
   color: var(--color-accent-cyan);
   font-size: 0.7rem;
   font-weight: 600;
@@ -588,7 +607,7 @@ button, input, select {
   align-self: flex-start;
   text-transform: uppercase;
   letter-spacing: 0.05em;
-  border: 1px solid rgba(6, 182, 212, 0.2);
+  border: 1px solid rgba(239, 68, 68, 0.2);
 }
 
 .stock-price-info {
@@ -666,8 +685,8 @@ button, input, select {
 }
 
 .indicator-btn.active {
-  background: rgba(6, 182, 212, 0.08);
-  border-color: rgba(6, 182, 212, 0.3);
+  background: rgba(239, 68, 68, 0.08);
+  border-color: rgba(239, 68, 68, 0.3);
   color: var(--color-text-primary);
 }
 
@@ -1155,7 +1174,7 @@ canvas {
 
 .lesson-item:hover {
   background: rgba(255, 255, 255, 0.04);
-  border-color: rgba(6, 182, 212, 0.3);
+  border-color: rgba(239, 68, 68, 0.3);
 }
 
 .lesson-item.completed {
@@ -1165,7 +1184,7 @@ canvas {
 
 .lesson-item.active {
   border-color: var(--color-accent-cyan);
-  background: rgba(6, 182, 212, 0.04);
+  background: rgba(239, 68, 68, 0.04);
 }
 
 .lesson-info {
@@ -1193,7 +1212,7 @@ canvas {
 }
 
 .lesson-item.active .lesson-icon {
-  background: rgba(6, 182, 212, 0.12);
+  background: rgba(239, 68, 68, 0.12);
   color: var(--color-accent-cyan);
 }
 
@@ -1380,7 +1399,7 @@ canvas {
   border-radius: 1rem;
   padding: 1.25rem;
   width: 320px;
-  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.6), 0 0 20px rgba(6, 182, 212, 0.25);
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.6), 0 0 20px rgba(239, 68, 68, 0.25);
   z-index: 1501;
   pointer-events: auto;
   opacity: 0;
@@ -1403,7 +1422,7 @@ canvas {
 .tutorial-badge {
   font-size: 0.65rem;
   font-weight: 700;
-  background: rgba(6, 182, 212, 0.15);
+  background: rgba(239, 68, 68, 0.15);
   color: var(--color-accent-cyan);
   padding: 0.15rem 0.4rem;
   border-radius: 0.25rem;
@@ -1456,9 +1475,9 @@ canvas {
   position: relative;
   z-index: 1400;
   outline: 2px solid var(--color-accent-cyan);
-  box-shadow: 0 0 25px rgba(6, 182, 212, 0.45) !important;
+  box-shadow: 0 0 25px rgba(239, 68, 68, 0.45) !important;
   pointer-events: auto;
-  border-color: rgba(6, 182, 212, 0.5) !important;
+  border-color: rgba(239, 68, 68, 0.5) !important;
 }
 
 /* Responsive Adjustments */
@@ -1486,10 +1505,18 @@ canvas {
 }
 
 @media (max-width: 768px) {
-  .app-header {
+  .brand-bar {
     flex-direction: column;
     align-items: flex-start;
     gap: 1rem;
+  }
+  .app-header.navigation-bar {
+    margin-top: 0;
+    width: 100%;
+  }
+  .header-nav {
+    width: 100%;
+    justify-content: space-around;
   }
   .header-stats {
     width: 100%;
@@ -1573,8 +1600,8 @@ canvas {
 }
 
 .ticker-tag {
-  background: rgba(6, 182, 212, 0.1);
-  border: 1px solid rgba(6, 182, 212, 0.25);
+  background: rgba(239, 68, 68, 0.1);
+  border: 1px solid rgba(239, 68, 68, 0.25);
   color: var(--color-accent-cyan);
   font-size: 0.68rem;
   font-weight: 700;
