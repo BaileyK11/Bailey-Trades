@@ -191,7 +191,7 @@ export class Chart {
     };
 
     // 2. Draw Gridlines & Y-Axis Labels
-    this.ctx.strokeStyle = 'rgba(255, 255, 255, 0.03)';
+    this.ctx.strokeStyle = 'rgba(0, 0, 0, 0.06)';
     this.ctx.lineWidth = 1;
     this.ctx.fillStyle = '#64748b'; // var(--color-text-muted)
     this.ctx.font = '10px Inter';
@@ -214,10 +214,10 @@ export class Chart {
     
     // 3. Draw Support and Resistance Levels (if enabled)
     if (this.showSR) {
-      // Draw Support Floor around $95 (dashed cyan ribbon)
+      // Draw Support Floor around $95 (dashed blue ribbon)
       const supportY = getY(95.00);
       this.ctx.save();
-      this.ctx.strokeStyle = 'rgba(6, 182, 212, 0.4)';
+      this.ctx.strokeStyle = 'rgba(37, 99, 235, 0.4)';
       this.ctx.lineWidth = 1.5;
       this.ctx.setLineDash([4, 4]);
       this.ctx.beginPath();
@@ -225,25 +225,25 @@ export class Chart {
       this.ctx.lineTo(width - paddingRight, supportY);
       this.ctx.stroke();
       
-      this.ctx.fillStyle = 'rgba(6, 182, 212, 0.05)';
+      this.ctx.fillStyle = 'rgba(37, 99, 235, 0.05)';
       this.ctx.fillRect(paddingLeft, supportY - 4, chartWidth, 8);
       
-      this.ctx.fillStyle = '#06b6d4';
+      this.ctx.fillStyle = '#2563eb';
       this.ctx.font = 'bold 9px Inter';
       this.ctx.fillText('Key Support Floor ($95.00)', paddingLeft + 10, supportY - 8);
       
-      // Draw Resistance Ceiling around $105 (dashed rose ribbon)
+      // Draw Resistance Ceiling around $105 (dashed red ribbon)
       const resistanceY = getY(105.00);
-      this.ctx.strokeStyle = 'rgba(244, 63, 94, 0.4)';
+      this.ctx.strokeStyle = 'rgba(220, 38, 38, 0.4)';
       this.ctx.beginPath();
       this.ctx.moveTo(paddingLeft, resistanceY);
       this.ctx.lineTo(width - paddingRight, resistanceY);
       this.ctx.stroke();
       
-      this.ctx.fillStyle = 'rgba(244, 63, 94, 0.05)';
+      this.ctx.fillStyle = 'rgba(220, 38, 38, 0.05)';
       this.ctx.fillRect(paddingLeft, resistanceY - 4, chartWidth, 8);
       
-      this.ctx.fillStyle = '#f43f5e';
+      this.ctx.fillStyle = '#dc2626';
       this.ctx.fillText('Key Resistance Ceiling ($105.00)', paddingLeft + 10, resistanceY - 8);
       
       this.ctx.restore();
@@ -261,7 +261,7 @@ export class Chart {
       const h = volumeHeight * pct;
       const y = height - paddingBottom - h;
       
-      this.ctx.fillStyle = candle.close >= candle.open ? 'rgba(16, 185, 129, 0.12)' : 'rgba(244, 63, 94, 0.12)';
+      this.ctx.fillStyle = candle.close >= candle.open ? 'rgba(22, 163, 74, 0.15)' : 'rgba(220, 38, 38, 0.15)';
       this.ctx.fillRect(x, y, w, h);
     });
 
@@ -276,7 +276,7 @@ export class Chart {
       const lowY = getY(candle.low);
       
       const isBullish = candle.close >= candle.open;
-      const color = isBullish ? '#10b981' : '#f43f5e';
+      const color = isBullish ? '#16a34a' : '#dc2626';
       
       this.ctx.strokeStyle = color;
       this.ctx.lineWidth = 1.5;
@@ -337,7 +337,7 @@ export class Chart {
         const x = getX(hoverVisIndex) + getCandleWidth() / 2;
         
         this.ctx.save();
-        this.ctx.strokeStyle = 'rgba(255, 255, 255, 0.15)';
+        this.ctx.strokeStyle = 'rgba(0, 0, 0, 0.15)';
         this.ctx.lineWidth = 1;
         this.ctx.setLineDash([4, 4]);
         
