@@ -142,7 +142,7 @@ button, input, select {
   align-items: center;
   justify-content: center;
   font-weight: 700;
-  box-shadow: 0 0 15px rgba(235, 229, 52, 0.3);
+  box-shadow: 0 0 15px rgba(37, 99, 235, 0.2);
 }
 
 .logo-text h1 {
@@ -150,9 +150,7 @@ button, input, select {
   font-size: 1.35rem;
   font-weight: 800;
   letter-spacing: -0.02em;
-  background: linear-gradient(90deg, #ffffff, #cbd5e1);
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
+  color: var(--color-text-primary);
   line-height: 1.1;
 }
 
