@@ -83,6 +83,7 @@ button, input, select {
 
 /* Grid Layout & Containers */
 .app-container {
+  flex: 1;
   display: flex;
   flex-direction: column;
   min-height: 100vh;
@@ -90,6 +91,7 @@ button, input, select {
   max-width: 1600px;
   margin: 0 auto;
   gap: 1.25rem;
+  min-width: 0;
 }
 
 /* Brand Bar Styling */
@@ -1778,4 +1780,554 @@ canvas {
   font-family: var(--font-family-title);
   color: var(--color-accent-red);
 }
+
+/* ==========================================================================
+   Sidebar Navigation & Custom Dropdown Styles
+   ========================================================================== */
+
+.app-layout {
+  display: flex;
+  height: 100vh;
+  width: 100vw;
+  overflow: hidden;
+  background-color: var(--color-bg);
+}
+
+.app-sidebar {
+  width: 4.5rem;
+  background: var(--color-card-bg);
+  border-right: 1px solid var(--color-card-border);
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  align-items: center;
+  padding: 1.25rem 0;
+  position: sticky;
+  top: 0;
+  height: 100vh;
+  z-index: 100;
+  box-shadow: var(--shadow-sm);
+  transition: width var(--transition-normal);
+  overflow: hidden;
+}
+
+/* Expanded State styling */
+.app-sidebar.expanded {
+  width: 14rem;
+  align-items: flex-start;
+  padding-left: 1rem;
+  padding-right: 1rem;
+}
+
+.sidebar-logo-container {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  width: 100%;
+  margin-bottom: 0.5rem;
+  padding: 0 0.5rem;
+}
+
+.sidebar-logo {
+  background: linear-gradient(135deg, var(--color-accent-cyan), #1d4ed8);
+  color: #ffffff;
+  width: 2.75rem;
+  height: 2.75rem;
+  border-radius: 0.75rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  box-shadow: 0 0 15px rgba(37, 99, 235, 0.25);
+  transition: transform var(--transition-fast);
+  flex-shrink: 0;
+}
+
+.sidebar-logo:hover {
+  transform: scale(1.05);
+}
+
+.sidebar-logo svg {
+  width: 1.5rem;
+  height: 1.5rem;
+}
+
+.sidebar-logo-text {
+  font-family: var(--font-family-title);
+  font-size: 1.15rem;
+  font-weight: 800;
+  color: var(--color-text-primary);
+  white-space: nowrap;
+  display: none;
+  animation: fadeIn var(--transition-fast);
+}
+
+.app-sidebar.expanded .sidebar-logo-text {
+  display: block;
+}
+
+.sidebar-toggle-btn {
+  background: none;
+  border: none;
+  width: 2.75rem;
+  height: 2.75rem;
+  border-radius: 0.75rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--color-text-secondary);
+  cursor: pointer;
+  margin-bottom: 1rem;
+  transition: all var(--transition-fast);
+  align-self: center;
+  flex-shrink: 0;
+}
+
+.app-sidebar.expanded .sidebar-toggle-btn {
+  align-self: flex-end;
+}
+
+.sidebar-toggle-btn:hover {
+  color: var(--color-text-primary);
+  background: var(--color-bg);
+}
+
+.sidebar-toggle-btn svg {
+  width: 1.25rem;
+  height: 1.25rem;
+}
+
+.sidebar-top {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 100%;
+}
+
+.app-sidebar.expanded .sidebar-top {
+  align-items: flex-start;
+}
+
+.sidebar-nav {
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+  align-items: center;
+  width: 100%;
+  padding: 1rem 0;
+  border-top: 1px solid var(--color-card-border);
+}
+
+.app-sidebar.expanded .sidebar-nav {
+  align-items: flex-start;
+}
+
+.sidebar-nav li {
+  position: relative;
+  width: 100%;
+  display: flex;
+  justify-content: center;
+}
+
+.app-sidebar.expanded .sidebar-nav li {
+  justify-content: flex-start;
+}
+
+.sidebar-btn, .app-sidebar .nav-tab {
+  background: none;
+  border: none;
+  width: 2.75rem;
+  height: 2.75rem;
+  border-radius: 0.75rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--color-text-secondary);
+  cursor: pointer;
+  position: relative;
+  transition: all var(--transition-fast);
+  padding: 0;
+  text-decoration: none;
+}
+
+.app-sidebar.expanded .nav-tab, .app-sidebar.expanded .sidebar-btn {
+  width: 100%;
+  justify-content: flex-start;
+  padding: 0 1rem;
+  gap: 0.75rem;
+}
+
+.sidebar-label {
+  display: none;
+  font-size: 0.88rem;
+  font-weight: 600;
+  white-space: nowrap;
+}
+
+.app-sidebar.expanded .sidebar-label {
+  display: inline-block;
+}
+
+.app-sidebar .nav-tab:hover, .sidebar-btn:hover {
+  color: var(--color-text-primary);
+  background: var(--color-bg);
+}
+
+.app-sidebar .nav-tab.active {
+  background: rgba(37, 99, 235, 0.1);
+  border: 1px solid rgba(37, 99, 235, 0.25);
+  color: var(--color-accent-cyan);
+  box-shadow: var(--shadow-glow-cyan);
+}
+
+.app-sidebar .nav-tab svg, .sidebar-btn svg {
+  width: 1.25rem;
+  height: 1.25rem;
+  flex-shrink: 0;
+}
+
+/* Tooltip overlay styling */
+.sidebar-tooltip {
+  position: absolute;
+  left: calc(100% + 0.75rem);
+  top: 50%;
+  transform: translateY(-50%) translateX(-10px);
+  background: var(--color-text-primary);
+  color: var(--color-bg);
+  padding: 0.4rem 0.75rem;
+  border-radius: 0.375rem;
+  font-size: 0.75rem;
+  font-weight: 500;
+  white-space: nowrap;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity var(--transition-fast), transform var(--transition-fast);
+  z-index: 200;
+  box-shadow: var(--shadow-md);
+}
+
+.app-sidebar.expanded .sidebar-tooltip {
+  display: none !important;
+}
+
+/* Arrow for tooltip */
+.sidebar-tooltip::before {
+  content: '';
+  position: absolute;
+  right: 100%;
+  top: 50%;
+  transform: translateY(-50%);
+  border-width: 5px;
+  border-style: solid;
+  border-color: transparent var(--color-text-primary) transparent transparent;
+}
+
+.app-sidebar .nav-tab:hover .sidebar-tooltip, .sidebar-btn:hover .sidebar-tooltip {
+  opacity: 1;
+  transform: translateY(-50%) translateX(0);
+}
+
+.sidebar-bottom {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 100%;
+}
+
+.app-sidebar.expanded .sidebar-bottom {
+  align-items: flex-start;
+  padding: 0 0.5rem;
+}
+
+/* Custom Dropdown styling */
+.custom-dropdown {
+  position: relative;
+  display: inline-flex;
+  flex-direction: column;
+}
+
+.dropdown-trigger {
+  display: inline-flex;
+  overflow: hidden;
+  border-radius: 0.5rem;
+  border: 1px solid var(--color-card-border);
+  background: var(--color-card-bg);
+  box-shadow: var(--shadow-sm);
+  transition: border-color var(--transition-fast);
+}
+
+.dropdown-trigger:hover {
+  border-color: var(--color-border-hover);
+}
+
+.dropdown-selected-label {
+  background: none;
+  border: none;
+  padding: 0.45rem 1rem;
+  font-size: 0.82rem;
+  font-weight: 500;
+  color: var(--color-text-primary);
+  cursor: pointer;
+  transition: background var(--transition-fast);
+  text-align: left;
+}
+
+.dropdown-arrow-btn {
+  background: none;
+  border: none;
+  border-left: 1px solid var(--color-card-border);
+  padding: 0.45rem 0.65rem;
+  color: var(--color-text-secondary);
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: background var(--transition-fast);
+}
+
+.dropdown-selected-label:hover, .dropdown-arrow-btn:hover {
+  background: var(--color-bg);
+}
+
+.dropdown-menu {
+  position: absolute;
+  top: calc(100% + 0.35rem);
+  right: 0;
+  z-index: 150;
+  width: 14rem;
+  overflow: hidden;
+  border-radius: 0.5rem;
+  border: 1px solid var(--color-card-border);
+  background: var(--color-card-bg);
+  box-shadow: var(--shadow-md);
+  display: flex;
+  flex-direction: column;
+  animation: dropdownFade var(--transition-fast);
+}
+
+@keyframes dropdownFade {
+  from { opacity: 0; transform: translateY(-5px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.dropdown-item {
+  background: none;
+  border: none;
+  padding: 0.6rem 1rem;
+  font-size: 0.82rem;
+  text-align: left;
+  color: var(--color-text-primary);
+  cursor: pointer;
+  font-weight: 500;
+  transition: background var(--transition-fast), color var(--transition-fast);
+  width: 100%;
+}
+
+.dropdown-item:hover {
+  background: var(--color-bg);
+  color: var(--color-accent-cyan);
+}
+
+.dropdown-item.active {
+  background: rgba(37, 99, 235, 0.08);
+  color: var(--color-accent-cyan);
+}
+
+/* ==========================================================================
+   Viewport Sizing & Layout Containment Overrides
+   ========================================================================== */
+
+.app-container {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  height: 100vh;
+  padding: 1.25rem 2rem;
+  max-width: 1600px;
+  margin: 0 auto;
+  gap: 0.75rem;
+  min-width: 0;
+  overflow: hidden;
+}
+
+.view-container {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  min-height: 0;
+  overflow: hidden;
+}
+
+#view-home, #view-trends {
+  overflow-y: auto;
+  padding-right: 0.5rem;
+}
+
+#view-simulator, #view-lessons {
+  overflow: hidden;
+}
+
+.app-workspace {
+  display: grid;
+  grid-template-columns: 1fr 380px;
+  gap: 1rem;
+  flex-grow: 1;
+  min-height: 0;
+}
+
+.left-panel {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  min-height: 0;
+  height: 100%;
+}
+
+.right-panel {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  min-height: 0;
+  height: 100%;
+}
+
+.chart-card {
+  flex: 1.3 1 auto;
+  min-height: 280px;
+}
+
+.canvas-wrapper {
+  flex-grow: 1;
+  min-height: 180px;
+}
+
+.portfolio-card {
+  flex: 1 1 auto;
+  min-height: 180px;
+  overflow: hidden;
+}
+
+.portfolio-card .card-body {
+  flex: 1;
+  overflow-y: auto;
+  min-height: 0;
+  padding-right: 0.25rem;
+}
+
+.order-card {
+  height: 100%;
+  overflow-y: auto;
+}
+
+.lessons-layout {
+  display: grid;
+  grid-template-columns: 280px 1fr 340px;
+  gap: 1rem;
+  align-items: stretch;
+  flex-grow: 1;
+  min-height: 0;
+  height: 100%;
+}
+
+.lessons-sidebar, .lesson-reading-card, .lessons-visualizer-card {
+  height: 100%;
+  overflow-y: auto;
+  min-height: 0;
+  max-height: none !important;
+}
+
+/* ==========================================================================
+   Full-screen Splash / Intro Screen Styles
+   ========================================================================== */
+
+.splash-screen {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background-color: var(--color-bg);
+  z-index: 9999;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: opacity 0.8s cubic-bezier(0.4, 0, 0.2, 1), visibility 0.8s;
+  background-image: 
+    radial-gradient(circle at 50% 50%, rgba(var(--color-accent-cyan-rgb), 0.04) 0%, transparent 60%);
+}
+
+.splash-screen.fade-out {
+  opacity: 0;
+  visibility: hidden;
+}
+
+.splash-content {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  gap: 1rem;
+  animation: splashScaleIn 0.8s cubic-bezier(0.16, 1, 0.3, 1);
+  width: 100%;
+  padding: 0 2rem;
+}
+
+@keyframes splashScaleIn {
+  from { opacity: 0; transform: scale(0.95); }
+  to { opacity: 1; transform: scale(1); }
+}
+
+.flip-text-container {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: var(--font-family-title);
+  font-size: 2.25rem;
+  font-weight: 800;
+  color: var(--color-text-primary);
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  line-height: 1.2;
+}
+
+.flip-words-wrapper {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  height: 3rem;
+  min-width: 150px;
+  perspective: 1000px;
+  transition: width 0.2s cubic-bezier(0.25, 0.8, 0.25, 1);
+}
+
+.flip-word {
+  position: absolute;
+  left: 0;
+  white-space: nowrap;
+  opacity: 0;
+  transform: rotateX(-90deg) translateY(15px);
+  transform-origin: 50% 50% -15px;
+  transition: opacity 0.3s ease, transform 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+  color: var(--color-accent-cyan);
+}
+
+.flip-word.active {
+  opacity: 1;
+  transform: rotateX(0deg) translateY(0);
+}
+
+.flip-word.exit {
+  opacity: 0;
+  transform: rotateX(90deg) translateY(-15px);
+}
+
+.hero-subtitle {
+  font-size: 0.95rem;
+  color: var(--color-text-secondary);
+  max-width: 600px;
+  line-height: 1.5;
+}
+
+
 

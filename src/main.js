@@ -198,6 +198,9 @@ document.addEventListener('DOMContentLoaded', () => {
     window.lucide.createIcons();
   }
   
+  // Initialize Text Flip Hero Banner
+  initTextFlip();
+  
   // Update UI stats
   updateUI();
 });
@@ -208,6 +211,80 @@ function loadLessonsChartBase() {
   // Give lessons chart 40 stable starting candles
   appState.lessonsChart.setData(staticScenario.slice(0, 40));
 }
+
+// Initialize Aceternity-style Text Flip Hero Component
+function initTextFlip() {
+  const words = ["Your Future", "Investment", "Learning", "Bailey Trades"];
+  const wrapper = document.querySelector('.flip-words-wrapper');
+  if (!wrapper) return;
+
+  // Clear any placeholder contents
+  wrapper.innerHTML = '';
+
+  // Create word spans
+  const spanElements = words.map((word, index) => {
+    const span = document.createElement('span');
+    span.className = 'flip-word';
+    span.textContent = word;
+    if (word === "Bailey Trades") {
+      span.style.color = "var(--color-text-primary)";
+      span.style.fontWeight = "900";
+    }
+    wrapper.appendChild(span);
+    return span;
+  });
+
+  let currentIdx = 0;
+  spanElements[0].classList.add('active');
+  adjustWrapperWidth(spanElements[0]);
+
+  function adjustWrapperWidth(el) {
+    const tempSpan = el.cloneNode(true);
+    tempSpan.style.visibility = 'hidden';
+    tempSpan.style.position = 'absolute';
+    tempSpan.style.display = 'inline-block';
+    document.body.appendChild(tempSpan);
+    const width = tempSpan.offsetWidth;
+    document.body.removeChild(tempSpan);
+    wrapper.style.width = `${width + 10}px`;
+  }
+
+  const interval = setInterval(() => {
+    const currentSpan = spanElements[currentIdx];
+    currentSpan.classList.remove('active');
+    currentSpan.classList.add('exit');
+
+    currentIdx++;
+    if (currentIdx >= words.length) {
+      clearInterval(interval);
+      return;
+    }
+
+    const nextSpan = spanElements[currentIdx];
+    nextSpan.classList.remove('exit');
+    nextSpan.classList.add('active');
+
+    adjustWrapperWidth(nextSpan);
+
+    if (currentIdx === words.length - 1) {
+      clearInterval(interval);
+      
+      // Hold on the final word "Bailey Trades" for 1.0s, then fade out and reveal the main app
+      setTimeout(() => {
+        const splash = document.getElementById('splash-screen');
+        if (splash) {
+          splash.classList.add('fade-out');
+          
+          // Complete layout removal after animation finishes
+          setTimeout(() => {
+            splash.style.display = 'none';
+          }, 800);
+        }
+      }, 1000);
+    }
+  }, 1300);
+}
+
 
 // Load a specific market scenario into the Simulator
 function loadSimulatorScenario(scenarioType) {
@@ -232,6 +309,29 @@ function loadSimulatorScenario(scenarioType) {
   const badgeEl = document.getElementById('stock-scenario-badge');
   if (badgeEl) {
     badgeEl.textContent = scenarioType.split('-').map(word => word.charAt(0).toUpperCase() + word.slice(1)).join(' ');
+  }
+
+  // Sync custom dropdown selected label and active item
+  const dropdownSelectedLabel = document.getElementById('dropdown-selected-label');
+  if (dropdownSelectedLabel) {
+    const scenarioNames = {
+      'bull-breakout': 'Bull Market Breakout',
+      'bear-downtrend': 'Bear Market Downtrend',
+      'support-bounce': 'Support Level Bounce',
+      'high-volatility': 'High Volatility Range'
+    };
+    dropdownSelectedLabel.textContent = scenarioNames[scenarioType] || scenarioType;
+  }
+
+  const dropdownMenu = document.getElementById('dropdown-menu');
+  if (dropdownMenu) {
+    dropdownMenu.querySelectorAll('.dropdown-item').forEach(item => {
+      if (item.dataset.value === scenarioType) {
+        item.classList.add('active');
+      } else {
+        item.classList.remove('active');
+      }
+    });
   }
   
   updateUI();
@@ -552,15 +652,51 @@ function setupEventListeners() {
     });
   });
   
-  // Market Scenario Selector
-  document.getElementById('scenario-selector').addEventListener('change', (e) => {
-    appState.pauseSimulation();
-    loadSimulatorScenario(e.target.value);
-    appState.resumeSimulation();
-  });
+  // Custom Market Scenario Dropdown logic
+  const dropdownSelectedLabel = document.getElementById('dropdown-selected-label');
+  const dropdownArrowBtn = document.getElementById('dropdown-arrow-btn');
+  const dropdownMenu = document.getElementById('dropdown-menu');
   
-  // Reset Simulation Button
-  document.getElementById('reset-sim-btn').addEventListener('click', () => {
+  if (dropdownSelectedLabel && dropdownArrowBtn && dropdownMenu) {
+    const toggleDropdown = (e) => {
+      e.stopPropagation();
+      dropdownMenu.classList.toggle('hidden');
+    };
+    
+    dropdownSelectedLabel.addEventListener('click', toggleDropdown);
+    dropdownArrowBtn.addEventListener('click', toggleDropdown);
+    
+    // Close dropdown menu when clicking anywhere else
+    document.addEventListener('click', () => {
+      dropdownMenu.classList.add('hidden');
+    });
+    
+    // Dropdown items selection
+    dropdownMenu.querySelectorAll('.dropdown-item').forEach(item => {
+      item.addEventListener('click', (e) => {
+        const scenarioValue = e.currentTarget.dataset.value;
+        const scenarioText = e.currentTarget.textContent.trim();
+        
+        // Update selected text
+        dropdownSelectedLabel.textContent = scenarioText;
+        
+        // Highlight active item
+        dropdownMenu.querySelectorAll('.dropdown-item').forEach(el => el.classList.remove('active'));
+        e.currentTarget.classList.add('active');
+        
+        // Hide dropdown
+        dropdownMenu.classList.add('hidden');
+        
+        // Load scenario
+        appState.pauseSimulation();
+        loadSimulatorScenario(scenarioValue);
+        appState.resumeSimulation();
+      });
+    });
+  }
+  
+  // Reset Simulation Button (both header and sidebar)
+  const resetHandler = () => {
     appState.pauseSimulation();
     if (confirm("Are you sure you want to reset your virtual portfolio balance, trade history, and lessons progress?")) {
       appState.simulator.reset();
@@ -569,12 +705,65 @@ function setupEventListeners() {
       appState.switchView('home');
     }
     appState.resumeSimulation();
-  });
+  };
+
+  const resetBtn = document.getElementById('reset-sim-btn');
+  if (resetBtn) resetBtn.addEventListener('click', resetHandler);
+
+  const resetBtnSidebar = document.getElementById('reset-sim-btn-sidebar');
+  if (resetBtnSidebar) resetBtnSidebar.addEventListener('click', resetHandler);
   
-  // Start Guided Tour Button (Simulator view)
-  document.getElementById('start-tour-btn').addEventListener('click', () => {
+  // Start Guided Tour Button (Simulator view & sidebar tour button)
+  const startTourHandler = () => {
     appState.tour.start();
-  });
+  };
+
+  const tourBtn = document.getElementById('start-tour-btn');
+  if (tourBtn) tourBtn.addEventListener('click', startTourHandler);
+
+  const tourBtnSidebar = document.getElementById('sidebar-tour-btn');
+  if (tourBtnSidebar) tourBtnSidebar.addEventListener('click', startTourHandler);
+
+  // Sidebar Logo click goes back Home
+  const sidebarLogo = document.getElementById('sidebar-logo');
+  if (sidebarLogo) {
+    sidebarLogo.addEventListener('click', () => {
+      appState.switchView('home');
+    });
+  }
+
+  // Sidebar expand/collapse toggle logic
+  const sidebar = document.getElementById('app-sidebar');
+  const sidebarToggleBtn = document.getElementById('sidebar-toggle-btn');
+  
+  if (sidebar && sidebarToggleBtn) {
+    // Check local storage for preference
+    const isSidebarExpanded = localStorage.getItem('sidebar-expanded') === 'true';
+    if (isSidebarExpanded) {
+      sidebar.classList.add('expanded');
+      sidebarToggleBtn.innerHTML = '<i data-lucide="chevron-left"></i>';
+    }
+    
+    sidebarToggleBtn.addEventListener('click', () => {
+      const expanded = sidebar.classList.toggle('expanded');
+      localStorage.setItem('sidebar-expanded', expanded);
+      
+      // Update toggle icon
+      if (expanded) {
+        sidebarToggleBtn.innerHTML = '<i data-lucide="chevron-left"></i>';
+      } else {
+        sidebarToggleBtn.innerHTML = '<i data-lucide="menu"></i>';
+      }
+      
+      if (window.lucide) window.lucide.createIcons();
+      
+      // Resize charts after sidebar layout changes
+      setTimeout(() => {
+        if (appState.chart) appState.chart.resize();
+        if (appState.lessonsChart) appState.lessonsChart.resize();
+      }, 300); // Wait for transition duration
+    });
+  }
   
   // Tab Switching (Holdings vs Ledger History in Simulator)
   document.querySelectorAll('.tab-btn').forEach(btn => {

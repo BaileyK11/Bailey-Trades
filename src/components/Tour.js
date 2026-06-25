@@ -218,7 +218,7 @@ export const tourSteps = [
     }
   },
   {
-    target: ".header-nav button[data-target='lessons']",
+    target: ".nav-tab[data-target='lessons']",
     title: "Join the Classroom",
     text: "Click the **Lessons** tab at the top anytime to access step-by-step reading modules, diagrams, concept visualizers, and check your knowledge with quizzes!",
     onShow: (app) => {
