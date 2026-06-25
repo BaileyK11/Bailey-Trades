@@ -1,6 +1,7 @@
 # BaileyTrades Academy - Python API Server
 # Serves live market quotes (Top 100) and stock news using yfinance.
 
+import os
 from flask import Flask, jsonify
 from flask_cors import CORS
 import yfinance as yf
@@ -8,8 +9,14 @@ import pandas as pd
 import requests
 
 app = Flask(__name__)
-# Enable CORS for the port 3000 frontend
-CORS(app, resources={r"/api/*": {"origins": "*"}})
+
+# Determine allowed origins based on environment
+ALLOWED_ORIGINS = os.environ.get(
+    "ALLOWED_ORIGINS", 
+    "http://localhost:3000"
+).split(",")
+
+CORS(app, resources={r"/api/*": {"origins": ALLOWED_ORIGINS}})
 
 # Map of the top 100 stock market tickers to company names for fast lookup
 TICKER_NAMES = {

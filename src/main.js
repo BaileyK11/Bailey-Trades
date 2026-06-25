@@ -10,6 +10,9 @@ import { Chart } from './components/Chart.js';
 import { Tour, tourSteps } from './components/Tour.js';
 import { Lessons } from './components/Lessons.js';
 
+// Environment Configuration
+const API_BASE_URL = import.meta.env.VITE_API_URL || 'http://localhost:5001';
+
 // Application State
 const appState = {
   ticker: "EDU",
@@ -967,7 +970,7 @@ function fetchNewsTicker() {
   const marqueeContainer = document.getElementById('ticker-marquee-items');
   if (!marqueeContainer) return;
   
-  fetch('http://localhost:5001/api/news')
+  fetch(`${API_BASE_URL}/api/news`)
     .then(response => response.json())
     .then(data => {
       if (data.success && data.news.length > 0) {
@@ -1021,7 +1024,7 @@ function fetchMarketTrends() {
     if (window.lucide) window.lucide.createIcons();
   }
 
-  fetch('http://localhost:5001/api/trends')
+  fetch(`${API_BASE_URL}/api/trends`)
     .then(response => response.json())
     .then(data => {
       if (data.success) {
