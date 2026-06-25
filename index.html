@@ -17,6 +17,17 @@
   <link rel="stylesheet" href="./src/style.css">
 </head>
 <body class="dark-theme">
+  <!-- Full-screen Splash / Intro Screen -->
+  <div id="splash-screen" class="splash-screen">
+    <div class="splash-content">
+      <div class="flip-text-container">
+        <span class="flip-static-text">Welcome to</span>
+        <div class="flip-words-wrapper">
+          <span class="flip-word active">Your Future</span>
+        </div>
+      </div>
+    </div>
+  </div>
   <!-- Interactive Tour Overlay -->
   <div id="tutorial-overlay" class="tutorial-overlay hidden">
     <div id="tutorial-mask" class="tutorial-mask"></div>
@@ -36,9 +47,72 @@
     </div>
   </div>
 
-  <div class="app-container">
-    <!-- Global Brand Bar -->
-    <div class="brand-bar">
+  <div class="app-layout">
+    <!-- Sidebar Navigation -->
+    <aside class="app-sidebar" id="app-sidebar">
+      <div class="sidebar-top">
+        <div class="sidebar-logo-container">
+          <div class="sidebar-logo" id="sidebar-logo" title="BaileyTrades Academy">
+            <i data-lucide="trending-up"></i>
+          </div>
+          <span class="sidebar-logo-text">BaileyTrades</span>
+        </div>
+        
+        <button id="sidebar-toggle-btn" class="sidebar-toggle-btn" title="Expand Navigation">
+          <i data-lucide="menu"></i>
+        </button>
+        
+        <ul class="sidebar-nav">
+          <li>
+            <button class="nav-tab active" data-target="home">
+              <i data-lucide="home"></i>
+              <span class="sidebar-label">Home</span>
+              <span class="sidebar-tooltip">Home</span>
+            </button>
+          </li>
+          <li>
+            <button class="nav-tab" data-target="lessons">
+              <i data-lucide="graduation-cap"></i>
+              <span class="sidebar-label">Lessons</span>
+              <span class="sidebar-tooltip">Lessons</span>
+            </button>
+          </li>
+          <li>
+            <button class="nav-tab" data-target="simulator">
+              <i data-lucide="line-chart"></i>
+              <span class="sidebar-label">Simulator</span>
+              <span class="sidebar-tooltip">Simulator</span>
+            </button>
+          </li>
+          <li>
+            <button class="nav-tab" data-target="trends">
+              <i data-lucide="trending-up"></i>
+              <span class="sidebar-label">Market Trends</span>
+              <span class="sidebar-tooltip">Market Trends</span>
+            </button>
+          </li>
+          <li>
+            <button id="sidebar-tour-btn" class="sidebar-btn" title="Start Guided Tour">
+              <i data-lucide="help-circle"></i>
+              <span class="sidebar-label">Tour</span>
+              <span class="sidebar-tooltip">Tour</span>
+            </button>
+          </li>
+        </ul>
+      </div>
+      
+      <div class="sidebar-bottom">
+        <button id="reset-sim-btn-sidebar" class="sidebar-btn" title="Reset Simulator">
+          <i data-lucide="rotate-ccw"></i>
+          <span class="sidebar-label">Reset Data</span>
+          <span class="sidebar-tooltip">Reset Data</span>
+        </button>
+      </div>
+    </aside>
+
+    <div class="app-container">
+      <!-- Global Brand Bar -->
+      <div class="brand-bar">
       <div class="logo-area" id="header-logo">
         <div class="logo-icon"><i data-lucide="trending-up"></i></div>
         <div class="logo-text">
@@ -73,24 +147,6 @@
       </div>
     </div>
 
-    <!-- Global Header with Navigation -->
-    <header class="app-header navigation-bar">
-      <!-- Top Navigation Tabs -->
-      <nav class="header-nav">
-        <button class="nav-tab active" data-target="home">
-          <i data-lucide="home"></i> Home
-        </button>
-        <button class="nav-tab" data-target="lessons">
-          <i data-lucide="graduation-cap"></i> Lessons
-        </button>
-        <button class="nav-tab" data-target="simulator">
-          <i data-lucide="line-chart"></i> Simulator
-        </button>
-        <button class="nav-tab" data-target="trends">
-          <i data-lucide="trending-up"></i> Market Trends
-        </button>
-      </nav>
-    </header>
 
     <!-- Global News Ticker Tape Bar -->
     <div class="news-ticker-bar" id="global-news-ticker">
@@ -223,12 +279,31 @@
 
               <div class="market-scenario-select">
                 <span class="control-label">Scenario:</span>
-                <select id="scenario-selector">
-                  <option value="bull-breakout">Bull Market Breakout</option>
-                  <option value="bear-downtrend">Bear Market Downtrend</option>
-                  <option value="support-bounce">Support Level Bounce</option>
-                  <option value="high-volatility">High Volatility Range</option>
-                </select>
+                <div class="custom-dropdown" id="custom-scenario-dropdown">
+                  <div class="dropdown-trigger">
+                    <button type="button" class="dropdown-selected-label" id="dropdown-selected-label">
+                      Bull Market Breakout
+                    </button>
+                    <button type="button" class="dropdown-arrow-btn" id="dropdown-arrow-btn" aria-label="Toggle Scenario Menu">
+                      <i data-lucide="chevron-down"></i>
+                    </button>
+                  </div>
+
+                  <div class="dropdown-menu hidden" id="dropdown-menu" role="menu">
+                    <button type="button" class="dropdown-item active" data-value="bull-breakout" role="menuitem">
+                      Bull Market Breakout
+                    </button>
+                    <button type="button" class="dropdown-item" data-value="bear-downtrend" role="menuitem">
+                      Bear Market Downtrend
+                    </button>
+                    <button type="button" class="dropdown-item" data-value="support-bounce" role="menuitem">
+                      Support Level Bounce
+                    </button>
+                    <button type="button" class="dropdown-item" data-value="high-volatility" role="menuitem">
+                      High Volatility Range
+                    </button>
+                  </div>
+                </div>
               </div>
             </div>
           </div>
@@ -469,6 +544,7 @@
       </div>
     </div>
   </div>
+</div>
 
   <!-- Main script loaded as module -->
   <script type="module" src="./src/main.js"></script>
