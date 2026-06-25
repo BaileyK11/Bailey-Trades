@@ -5,3 +5,11 @@ dist
 *.log
 venv/
 venv_test/
+
+# local env files
+.env.local
+.env.*.local
+
+# Python caches
+__pycache__/
+*.pyc
