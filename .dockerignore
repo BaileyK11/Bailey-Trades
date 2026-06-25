@@ -1,0 +1,9 @@
+node_modules
+dist
+venv
+venv_test
+.git
+.gemini
+*.log
+__pycache__
+*.pyc

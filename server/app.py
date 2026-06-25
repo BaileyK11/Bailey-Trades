@@ -172,5 +172,7 @@ def get_news():
         }), 500
 
 if __name__ == '__main__':
-    # Run Flask server on port 5001
-    app.run(port=5001, debug=True)
+    # Run Flask server, binding to environment host/port with local fallbacks
+    host = os.environ.get('HOST', '0.0.0.0')
+    port = int(os.environ.get('PORT', 5001))
+    app.run(host=host, port=port, debug=True)
