@@ -2280,53 +2280,48 @@ canvas {
 
 .flip-text-container {
   display: flex;
+  flex-direction: column;
   align-items: center;
   justify-content: center;
   font-family: var(--font-family-title);
-  font-size: 2.25rem;
+  font-size: 2.75rem;
   font-weight: 800;
   color: var(--color-text-primary);
-  flex-wrap: wrap;
   gap: 0.5rem;
-  line-height: 1.2;
+  line-height: 1.1;
 }
 
 .flip-words-wrapper {
   position: relative;
   display: inline-flex;
   align-items: center;
-  height: 3rem;
-  min-width: 150px;
+  justify-content: center;
+  height: 3.5rem;
+  width: 100%;
   perspective: 1000px;
-  transition: width 0.2s cubic-bezier(0.25, 0.8, 0.25, 1);
 }
 
 .flip-word {
   position: absolute;
-  left: 0;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%) rotateX(-90deg) translateY(15px);
+  transform-origin: 50% 50% -15px;
   white-space: nowrap;
   opacity: 0;
-  transform: rotateX(-90deg) translateY(15px);
-  transform-origin: 50% 50% -15px;
   transition: opacity 0.3s ease, transform 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
   color: var(--color-accent-cyan);
+  text-align: center;
 }
 
 .flip-word.active {
   opacity: 1;
-  transform: rotateX(0deg) translateY(0);
+  transform: translate(-50%, -50%) rotateX(0deg) translateY(0);
 }
 
 .flip-word.exit {
   opacity: 0;
-  transform: rotateX(90deg) translateY(-15px);
-}
-
-.hero-subtitle {
-  font-size: 0.95rem;
-  color: var(--color-text-secondary);
-  max-width: 600px;
-  line-height: 1.5;
+  transform: translate(-50%, -50%) rotateX(90deg) translateY(-15px);
 }
 
 

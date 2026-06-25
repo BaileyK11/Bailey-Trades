@@ -236,18 +236,6 @@ function initTextFlip() {
 
   let currentIdx = 0;
   spanElements[0].classList.add('active');
-  adjustWrapperWidth(spanElements[0]);
-
-  function adjustWrapperWidth(el) {
-    const tempSpan = el.cloneNode(true);
-    tempSpan.style.visibility = 'hidden';
-    tempSpan.style.position = 'absolute';
-    tempSpan.style.display = 'inline-block';
-    document.body.appendChild(tempSpan);
-    const width = tempSpan.offsetWidth;
-    document.body.removeChild(tempSpan);
-    wrapper.style.width = `${width + 10}px`;
-  }
 
   const interval = setInterval(() => {
     const currentSpan = spanElements[currentIdx];
@@ -263,8 +251,6 @@ function initTextFlip() {
     const nextSpan = spanElements[currentIdx];
     nextSpan.classList.remove('exit');
     nextSpan.classList.add('active');
-
-    adjustWrapperWidth(nextSpan);
 
     if (currentIdx === words.length - 1) {
       clearInterval(interval);
