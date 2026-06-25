@@ -58,14 +58,42 @@ Many new investors fail because they treat the stock market like a casino—buyi
 
 ## 🛠️ Local Installation & Setup
 
-### Prerequisites
+You can choose to run the application either using **Docker (recommended for a quick start)** or by running the services **manually**.
+
+---
+
+### 🐳 Option A: Run with Docker (Recommended)
+
+Make sure you have [Docker](https://www.docker.com/) installed and running.
+
+#### 1. Development Mode (with Hot-Reloading)
+To build and start both the frontend and backend services together in development mode:
+```bash
+docker compose up --build
+```
+* **Frontend**: [http://localhost:3000](http://localhost:3000)
+* **Backend API**: [http://localhost:5001](http://localhost:5001)
+
+Any modifications you make to local files will automatically sync and hot-reload inside the running containers.
+
+#### 2. Production Mode (Served via Nginx)
+To build and run the optimized production configuration:
+```bash
+docker compose -f docker-compose.prod.yml up --build
+```
+* **Frontend**: [http://localhost](http://localhost) (Port 80)
+* **Backend API**: [http://localhost:5001](http://localhost:5001)
+
+---
+
+### 💻 Option B: Manual Setup
+
+#### Prerequisites
 Make sure you have the following installed on your machine:
 * [Node.js](https://nodejs.org/) (v18 or higher recommended)
 * [Python 3.12](https://www.python.org/)
 
----
-
-### Step 1: Set up the Backend API
+#### Step 1: Set up the Backend API
 1. Navigate to the `server/` directory:
    ```bash
    cd server
@@ -85,9 +113,7 @@ Make sure you have the following installed on your machine:
    ```
    *The server will start running on [http://localhost:5001](http://localhost:5001).*
 
----
-
-### Step 2: Set up the Frontend
+#### Step 2: Set up the Frontend
 1. Return to the root project directory:
    ```bash
    cd ..

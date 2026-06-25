@@ -1,0 +1,27 @@
+services:
+  backend:
+    build:
+      context: ./server
+      dockerfile: Dockerfile
+    ports:
+      - "5001:5001"
+    environment:
+      - HOST=0.0.0.0
+      - PORT=5001
+      # Update to your production domain on deployment
+      - ALLOWED_ORIGINS=http://localhost
+    restart: always
+
+  frontend:
+    build:
+      context: .
+      dockerfile: Dockerfile
+      target: production
+      args:
+        # Update to your production API URL on deployment
+        - VITE_API_URL=http://localhost:5001
+    ports:
+      - "80:80"
+    restart: always
+    depends_on:
+      - backend

@@ -1,0 +1,31 @@
+services:
+  backend:
+    build:
+      context: ./server
+      dockerfile: Dockerfile
+    ports:
+      - "5001:5001"
+    environment:
+      - HOST=0.0.0.0
+      - PORT=5001
+      - ALLOWED_ORIGINS=http://localhost:3000
+    volumes:
+      - ./server:/app
+    restart: always
+
+  frontend:
+    build:
+      context: .
+      dockerfile: Dockerfile
+      target: development
+    ports:
+      - "3000:3000"
+    environment:
+      - VITE_API_URL=http://localhost:5001
+    volumes:
+      - .:/app
+      - /app/node_modules
+      - /app/dist
+    restart: always
+    depends_on:
+      - backend
